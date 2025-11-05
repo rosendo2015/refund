@@ -4,7 +4,8 @@ const amount = document.getElementById("amount");
 const expense = document.getElementById("expense");
 const category = document.getElementById("category");
 const expenseList = document.querySelector("ul");
-const expenseQuantity = document.querySelector("aside header p span")
+const expenseQuantity = document.querySelector("aside header p span");
+const expensesTotal = document.querySelector("aside header h2")
 
 //Captura p evento de input
 amount.oninput = () => {
@@ -85,7 +86,7 @@ function expenseAdd(newExpense) {
     //Add o item a lista
     expenseList.append(expenseItem);
     //atualiza os totais
-    updateTotals()
+    updateTotals();
   } catch (error) {
     alert("não foi possivel adicionar a despesa.");
     console.log(error);
@@ -93,14 +94,40 @@ function expenseAdd(newExpense) {
 }
 
 //atualizar os totais
-function updateTotals(){
-    try{
-const items = expenseList.children
+function updateTotals() {
+  try {
+    const items = expenseList.children;
 
-expenseQuantity.textContent = `${items.length} ${items.length > 1 ? "despesas" : "despesa"}`
-    }catch(error){
-        alert("Não foi possivel atualizar a lista de despesas.")
-        console.log(error);
-        
+    expenseQuantity.textContent = `${items.length} ${
+      items.length > 1 ? "despesas" : "despesa"
+    }`;
+
+    //Variável para incrementar o total
+    let total = 0;
+
+    //percorrer cada item (li) da lista (ul)
+    for (let item = 0; item < items.length; item++) {
+      const itemAmount = items[item].querySelector(".expense-amount");
+
+      let value = itemAmount.textContent.replace(/[^\d,]/g,"").replace(",",".");
+      value = parseFloat(value)
+
+      if(isNaN(value)){
+        return alert("Número inválido")
+      }
+      total += Number(value)
     }
+    const symbolBRL = document.createElement("small")
+    symbolBRL.textContent = "R$"
+
+    total = formatCurrencyBRL(total).toUpperCase().replace("R$","")
+
+    //limpa o conteudo do elemento
+    expensesTotal.innerHTML = ""
+
+    expensesTotal.append(symbolBRL, total)
+  } catch (error) {
+    alert("Não foi possivel atualizar a lista de despesas.");
+    console.log(error);
+  }
 }

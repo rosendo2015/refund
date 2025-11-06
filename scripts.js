@@ -150,4 +150,6 @@ function formClear(){
   expense.value = "";
   category.value = "";
   amount.value = "";
+
+  expense.focus()
 }

@@ -5,7 +5,7 @@ const expense = document.getElementById("expense");
 const category = document.getElementById("category");
 const expenseList = document.querySelector("ul");
 const expenseQuantity = document.querySelector("aside header p span");
-const expensesTotal = document.querySelector("aside header h2")
+const expensesTotal = document.querySelector("aside header h2");
 
 //Captura p evento de input
 amount.oninput = () => {
@@ -85,6 +85,8 @@ function expenseAdd(newExpense) {
     expenseItem.append(expenseIcon, expenseInfo, expenseAmount, removeIcon);
     //Add o item a lista
     expenseList.append(expenseItem);
+    //limpa inputs
+    formClear()
     //atualiza os totais
     updateTotals();
   } catch (error) {
@@ -109,25 +111,43 @@ function updateTotals() {
     for (let item = 0; item < items.length; item++) {
       const itemAmount = items[item].querySelector(".expense-amount");
 
-      let value = itemAmount.textContent.replace(/[^\d,]/g,"").replace(",",".");
-      value = parseFloat(value)
+      let value = itemAmount.textContent
+        .replace(/[^\d,]/g, "")
+        .replace(",", ".");
+      value = parseFloat(value);
 
-      if(isNaN(value)){
-        return alert("Número inválido")
+      if (isNaN(value)) {
+        return alert("Número inválido");
       }
-      total += Number(value)
+      total += Number(value);
     }
-    const symbolBRL = document.createElement("small")
-    symbolBRL.textContent = "R$"
+    const symbolBRL = document.createElement("small");
+    symbolBRL.textContent = "R$";
 
-    total = formatCurrencyBRL(total).toUpperCase().replace("R$","")
+    total = formatCurrencyBRL(total).toUpperCase().replace("R$", "");
 
     //limpa o conteudo do elemento
-    expensesTotal.innerHTML = ""
+    expensesTotal.innerHTML = "";
 
-    expensesTotal.append(symbolBRL, total)
+    expensesTotal.append(symbolBRL, total);
   } catch (error) {
     alert("Não foi possivel atualizar a lista de despesas.");
     console.log(error);
   }
+}
+
+//Captura o id pra excluir. Com o click
+expenseList.addEventListener("click", function (event) {
+  if (event.target.classList.contains("remove-icon")) {
+    const item = event.target.closest(".expense");
+    item.remove();
+  }
+
+  updateTotals();
+});
+
+function formClear(){
+  expense.value = "";
+  category.value = "";
+  amount.value = "";
 }

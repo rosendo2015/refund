@@ -8,6 +8,7 @@
 
 - Javascript
 - Criar, Ler, Editar e Apagar Itens da lista de despesas.
+- calcular o total das despesa a serem devolvidas.
 - Criação de layouts com CSS;
 - CSS Flexbox;
 - Posicionamento de elementos;
